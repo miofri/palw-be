@@ -6,6 +6,7 @@ const palProjection = {
 	ElementType1: 1,
 	ElementType2: 1,
 	CombiRank: 1,
+	IndexOrder: 1,
 };
 
 module.exports = palProjection;

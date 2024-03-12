@@ -8,6 +8,7 @@ const palSchema = new mongoose.Schema({
 	ElementType1: String,
 	ElementType2: String,
 	CombiRank: Number,
+	IndexOrder: Number
 });
 
 palSchema.set('toJSON', {

@@ -23,8 +23,10 @@ palRouter.get('/palcombos', (req, res) => {
 	});
 });
 
-palRouter.post('/palcombos/', (req, res) => {
-	const requestedPal = req.body.palName;
+palRouter.get('/palcombos/:palname', (req, res) => {
+	const requestedPal = req.params.palname;
+	console.log(requestedPal);
+
 	PalCombos.find({}).then((docs) => {
 		const resultArray = findAndFilterPalCombos(docs, requestedPal);
 		res.json(resultArray);

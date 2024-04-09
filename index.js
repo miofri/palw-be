@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const path = require('path');
 const palRouter = require('./controllers/palRouter');
 require('dotenv').config();
 const url = process.env.MONGODB_URI;
@@ -29,8 +30,16 @@ morgan.token('body', (req) => {
 app.get('/', (req, res) => {
 	res.redirect('/api/pal');
 });
+
 app.use('/api/pal', palRouter);
 
+app.get('/*', function (req, res) {
+	res.sendFile(path.join(__dirname, 'build/index.html'), function (err) {
+		if (err) {
+			res.status(500).send(err);
+		}
+	});
+});
 const PORT = process.env.PORT || 3001;
 app.listen(PORT);
 console.log(`Server running on port ${PORT}`);

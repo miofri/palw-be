@@ -6,6 +6,7 @@ function findAndFilterPalCombos(docs, requestedPal) {
 	docs.filter((doc) => {
 		for (const key in doc) {
 			if (doc[key] === requestedPal && doc.Pal !== 'None') {
+				console.log('Hello!', key);
 				filteredPal.push({ [key]: doc[key], Pal: doc.Pal });
 			}
 		}

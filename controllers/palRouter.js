@@ -33,4 +33,24 @@ palRouter.get('/palcombos/:palname', (req, res) => {
 	});
 });
 
+palRouter.get('/findbyparents', async (req, res) => {
+	const parentOne = req.query.palOne;
+	const parentTwo = req.query.palTwo;
+
+	const palReference = await PalCombos.find({ Pal: 'None' })
+		.exec()
+		.then((result) => {
+			const resultToObject = result[0].toObject();
+			return Object.keys(resultToObject).find(
+				(key) => resultToObject[key] === parentTwo
+			);
+		});
+
+	PalCombos.find({ Pal: parentOne }).then((result) => {
+		const resultToObject = result[0].toObject();
+		console.log(palReference, resultToObject[palReference]);
+	});
+	res.send(200);
+});
+
 module.exports = palRouter;

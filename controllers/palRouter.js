@@ -5,6 +5,7 @@ const Pals = require('../models/palSchema');
 const PalCombos = require('../models/palCombos/palCombosSchema');
 const palProjection = require('../models/allPals/palProjection');
 const { findAndFilterPalCombos } = require('../utils/findAndFilterPalCombos');
+const { findChild } = require('../utils/findChild');
 
 const palImagePath = path.join(__dirname, '..', 'assets', 'palIcons');
 const palWorkIconsPath = path.join(__dirname, '..', 'assets', 'palWorkIcons');
@@ -24,33 +25,24 @@ palRouter.get('/palcombos', (req, res) => {
 });
 
 palRouter.get('/palcombos/:palname', (req, res) => {
-	const requestedPal = req.params.palname;
-	console.log(requestedPal);
+	try {
+		const requestedPal = req.params.palname;
+		console.log(requestedPal);
 
-	PalCombos.find({}).then((docs) => {
-		const resultArray = findAndFilterPalCombos(docs, requestedPal);
-		res.json(resultArray);
-	});
+		PalCombos.find({}).then((docs) => {
+			const resultArray = findAndFilterPalCombos(docs, requestedPal);
+			res.json(resultArray);
+		});
+	} catch (error) {
+		res.status(500).json({ error: 'No pal found' });
+	}
 });
 
 palRouter.get('/findbyparents', async (req, res) => {
-	const parentOne = req.query.palOne;
-	const parentTwo = req.query.palTwo;
+	const result = await findChild(req);
+	console.log(result);
 
-	const palReference = await PalCombos.find({ Pal: 'None' })
-		.exec()
-		.then((result) => {
-			const resultToObject = result[0].toObject();
-			return Object.keys(resultToObject).find(
-				(key) => resultToObject[key] === parentTwo
-			);
-		});
-
-	PalCombos.find({ Pal: parentOne }).then((result) => {
-		const resultToObject = result[0].toObject();
-		console.log(palReference, resultToObject[palReference]);
-	});
-	res.send(200);
+	res.json({ child: `${result}` });
 });
 
 module.exports = palRouter;

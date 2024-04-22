@@ -27,8 +27,6 @@ palRouter.get('/palcombos', (req, res) => {
 palRouter.get('/palcombos/:palname', (req, res) => {
 	try {
 		const requestedPal = req.params.palname;
-		console.log(requestedPal);
-
 		PalCombos.find({}).then((docs) => {
 			const resultArray = findAndFilterPalCombos(docs, requestedPal);
 			res.json(resultArray);
@@ -39,10 +37,14 @@ palRouter.get('/palcombos/:palname', (req, res) => {
 });
 
 palRouter.get('/findbyparents', async (req, res) => {
-	const result = await findChild(req);
-	console.log(result);
-
-	res.json({ child: `${result}` });
+	try {
+		const result = await findChild(req);
+		result === undefined
+			? res.status(500).json({ error: 'parents are not valid' })
+			: res.json({ child: `${result}` });
+	} catch (error) {
+		res.status(500).json({ error: `${error}` });
+	}
 });
 
 module.exports = palRouter;

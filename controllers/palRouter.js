@@ -39,9 +39,12 @@ palRouter.get('/palcombos/:palname', (req, res) => {
 palRouter.get('/findbyparents', async (req, res) => {
 	try {
 		const result = await findChild(req);
-		result === undefined
-			? res.status(500).json({ error: 'parents are not valid' })
-			: res.json({ child: `${result}` });
+		if (result === undefined) {
+			res.status(500).json({ error: 'parents are not valid' });
+		}
+		Pals.find({ Name: result }, palProjection).then((result) => {
+			res.json(result);
+		});
 	} catch (error) {
 		res.status(500).json({ error: `${error}` });
 	}
